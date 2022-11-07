@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DatabaseLayer": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DATABASE_PASSWORD": "SecretPassword@01"
+      }
+    }
+  }
+}
