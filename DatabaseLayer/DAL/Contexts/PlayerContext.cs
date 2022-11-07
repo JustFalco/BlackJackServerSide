@@ -1,4 +1,5 @@
 ﻿using DatabaseLayer.DAL.Configurations;
+using DatabaseLayer.DAL.DomainModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseLayer.DAL.Contexts;
@@ -6,7 +7,9 @@ namespace DatabaseLayer.DAL.Contexts;
 public class PlayerContext : DbContext
 {
 
-	private string connectionString = $"Server=localhost;Port=3307;Database=BlackJackPlayer;Uid=root;Pwd={Environment.GetEnvironmentVariable("DATABASE_PASSWORD")};";
+	private string connectionString = $"Server=localhost;Port=3307;Database=BlackJackPlayer;Uid=root;Pwd=SecretPassword@01;";
+
+	public DbSet<Player> Players { get; set; }
 
 	public PlayerContext()
 	{
