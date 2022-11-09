@@ -11,24 +11,30 @@ namespace DatabaseLayer.Repositories
 {
 	public class PlayerRepository
 	{
-		private PlayerContext _playerContext;
+		private GameContext _gameContext;
 
-		public PlayerRepository(PlayerContext playerContext)
+		public PlayerRepository(GameContext playerContext)
 		{
-			_playerContext = playerContext;
-			_playerContext.Database.EnsureCreated();
-			_playerContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+			_gameContext = playerContext;
+			_gameContext.Database.EnsureCreated();
+			_gameContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 		}
 
 		public List<Player> getAllPlayers()
 		{
-			return _playerContext.Players.ToList();
+			return _gameContext.Players.ToList();
 		}
 
 		public void AddPlayerToDB(Player player)
 		{
-			_playerContext.Players.AddAsync(player);
-			_playerContext.SaveChanges();
+			_gameContext.Players.AddAsync(player);
+			_gameContext.SaveChanges();
 		}
+
+		public Player? GetPlayerByEmail(string Email)
+		{
+			return _gameContext.Players.Where(p => p.Email == Email).First();
+		}
+
 	}
 }
