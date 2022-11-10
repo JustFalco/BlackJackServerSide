@@ -51,8 +51,8 @@ class Program
 		repository.AddPlayerToDB(player);
 
 		game.PlayersInGame.Add(player);
-		game.cards = new CardDeck();
-		game.isActiveGame = true;
+		/*game.cards = new CardDeck();
+		game.isActiveGame = true;*/
 		gameRepository.SaveGameInDatabase(game);
 		Thread.Sleep(2000);
 

@@ -15,6 +15,7 @@ namespace GameLibrary.Controllers
 
 		public GameController(GameRepository repository)
 		{
+			//Eerst met cache praten, dan met repository
 			gameRepository = repository;
 		}
 
