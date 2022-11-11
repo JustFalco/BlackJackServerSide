@@ -17,13 +17,13 @@ public class GameHub : Hub
 
 	public async Task JoinGame(string email, int gameId)
 	{
-		int gameRoomCode = gameId;
+		/*int gameRoomCode = gameId;
 
 
 		if (!_gameController.CheckIfGameExists(gameRoomCode))
 		{
 			gameRoomCode = _gameController.NewGame();
-		}
+		}*/
 		
 		//_gameController.AddPlayerToGame(gameRoomCode, email);
 

@@ -6,7 +6,7 @@ namespace DatabaseLayer.DAL.Contexts;
 
 public class GameContext : DbContext
 {
-	private string connectionString = $"Server=localhost;Port=3307;Database=BlackJackGame;Uid=root;Pwd=SecretPassword@01;";
+	private string connectionString = "server=localhost;Port=3307;database=BlackJackGame;user=root;password=SecretPassword@01;";
 
 	public DbSet<Game> Games { get; set; }
 	public DbSet<Card> Cards { get; set; }
@@ -17,7 +17,7 @@ public class GameContext : DbContext
 
 	public GameContext()
 	{
-
+		
 	}
 
 	public GameContext(DbContextOptions<GameContext> context) : base(context)

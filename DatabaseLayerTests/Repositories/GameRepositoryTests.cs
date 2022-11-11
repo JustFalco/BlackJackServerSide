@@ -17,7 +17,7 @@ namespace DatabaseLayer.Repositories.Tests
 	{
 		private GameRepository gameRepository;
 		private GameContext gameContext;
-		private string connectionString = $"Server=localhost;Port=3307;Database=BlackJackGameTestDB;Uid=root;Pwd=SecretPassword@01;";
+		
 		public GameRepositoryTests()
         {
             var builder = new DbContextOptionsBuilder<GameContext>();

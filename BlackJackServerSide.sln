@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseLayerTests", "Datab
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{A0E9D753-5483-4340-95B2-0E45A098E780}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJackServer", "C:\Users\JustFalco\source\repos\BlackJackServer\BlackJackServer\BlackJackServer.csproj", "{28D87D4B-4C8B-4EAA-B389-4C2B36BF76BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJackServer", "BlackJackServer\BlackJackServer.csproj", "{2204B868-8785-47AF-B2BA-21BE1D9FE392}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,10 +61,10 @@ Global
 		{A0E9D753-5483-4340-95B2-0E45A098E780}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0E9D753-5483-4340-95B2-0E45A098E780}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0E9D753-5483-4340-95B2-0E45A098E780}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28D87D4B-4C8B-4EAA-B389-4C2B36BF76BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28D87D4B-4C8B-4EAA-B389-4C2B36BF76BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28D87D4B-4C8B-4EAA-B389-4C2B36BF76BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28D87D4B-4C8B-4EAA-B389-4C2B36BF76BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2204B868-8785-47AF-B2BA-21BE1D9FE392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2204B868-8785-47AF-B2BA-21BE1D9FE392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2204B868-8785-47AF-B2BA-21BE1D9FE392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2204B868-8785-47AF-B2BA-21BE1D9FE392}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

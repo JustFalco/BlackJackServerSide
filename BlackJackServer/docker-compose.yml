@@ -1,0 +1,36 @@
+﻿version: '1.0'
+
+networks:
+    dockerapi-dev:
+        driver: bridge
+
+services:
+   db:
+     image: mysql:latest
+     environment:
+        - MYSQL_ROOT_PASSWORD=SecretPassword@01
+        - MYSQL_DATABASE=BlackJackGame
+     volumes:
+        - dbdata:/var/lib/mysql
+        - ./_MySQL_Init_Script:/docker-entrypoint-initdb.d
+     restart: always
+     ports:
+        - "3307:3306"
+   web:
+        container_name: web
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            - db
+        links:
+            - db
+        ports:
+             - "49155:80"
+             - "49156:443"
+        networks:
+            - dockerapi-dev
+        environment:
+            MYSQL_SERVER_NAME: db
+volumes:
+    dbdata:
