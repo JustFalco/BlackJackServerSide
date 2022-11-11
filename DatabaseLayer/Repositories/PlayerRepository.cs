@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using DatabaseLayer.DAL.Contexts;
 using DatabaseLayer.DAL.DomainModels;
 using Microsoft.EntityFrameworkCore;
+using Shared.Exeptions;
+using Shared.Utils;
 
 namespace DatabaseLayer.Repositories
 {
-	public class PlayerRepository
-	{
+	public class PlayerRepository : IPlayerRepository
+    {
 		private GameContext _gameContext;
 
 		public PlayerRepository(GameContext playerContext)
@@ -27,13 +29,29 @@ namespace DatabaseLayer.Repositories
 
 		public void AddPlayerToDB(Player player)
 		{
+            if (string.IsNullOrEmpty(player.Email) || string.IsNullOrEmpty(player.Name))
+            {
+                throw new ArgumentNullException("player name and email cannot be empty");
+            }
+            if (!EmailValidator.Validate(player.Email))
+            {
+                throw new IllegalEmailExeption($"The email {player.Email} is illegal and cannot be used to search for players");
+            }
+            if (GetPlayerByEmail(player.Email) != null)
+            {
+                throw new DuplicateObjectInDBExeption($"User with email {player.Email} already exists");
+            }
 			_gameContext.Players.AddAsync(player);
 			_gameContext.SaveChanges();
 		}
 
-		public Player? GetPlayerByEmail(string Email)
+		public Player GetPlayerByEmail(string email)
 		{
-			return _gameContext.Players.Where(p => p.Email == Email).First();
+            if (!EmailValidator.Validate(email))
+            {
+                throw new IllegalEmailExeption($"The email {email} is illegal and cannot be used to search for players");
+            }
+			return _gameContext.Players.Where(p => p.Email == email).FirstOrDefault();
 		}
 
 	}

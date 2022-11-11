@@ -12,7 +12,7 @@ class Program
 	static void Main(string[] args)
 	{
 		var connection = new HubConnectionBuilder()
-			.WithUrl("https://localhost:5001/gameHub")
+			.WithUrl("https://localhost:49155/gameHub")
 			.Build();
 
 		connection.StartAsync().Wait();

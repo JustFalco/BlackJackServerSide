@@ -19,13 +19,13 @@ namespace DatabaseLayer.Repositories.Tests
 		private GameContext gameContext;
 		private string connectionString = $"Server=localhost;Port=3307;Database=BlackJackGameTestDB;Uid=root;Pwd=SecretPassword@01;";
 		public GameRepositoryTests()
-		{
-			var builder = new DbContextOptionsBuilder<GameContext>();
-			builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        {
+            var builder = new DbContextOptionsBuilder<GameContext>();
+			builder.UseInMemoryDatabase(databaseName: "Testdatabase2");
 			DbContextOptions<GameContext> options = builder.Options;
 			gameContext = new GameContext(options);
 			gameRepository = new GameRepository(gameContext);
-		}
+        }
 
         private Game gameBuilder()
         {

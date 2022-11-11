@@ -5,23 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using DatabaseLayer.DAL.DomainModels;
 using DatabaseLayer.Repositories;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace GameLibrary.Controllers
 {
 	public class GameController
 	{
+        private readonly IGameRepository _repository;
+        private readonly IMemoryCache _cache;
 
-		private GameRepository gameRepository;
 
-		public GameController(GameRepository repository)
-		{
-			//Eerst met cache praten, dan met repository
-			gameRepository = repository;
-		}
+        public GameController(IGameRepository repository, IMemoryCache cache)
+        {
+            //Eerst met cache praten, dan met repository
+            _repository = repository;
+            _cache = cache;
+        }
 
 		public bool CheckIfGameExists(int gameId)
 		{
-			if (gameRepository.GetGameFromDatabase(gameId) != null)
+			if (_repository.GetGameFromDatabase(gameId) != null)
 			{
 				return true;
 			}
@@ -29,9 +32,9 @@ namespace GameLibrary.Controllers
 			return false;
 		}
 
-		public void ContinueGame()
-		{
-			throw new NotImplementedException();
+		public void ContinueGame(int gameId)
+        {
+            throw new NotImplementedException();
 		}
 
 		public int NewGame()

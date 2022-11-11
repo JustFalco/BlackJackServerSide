@@ -5,11 +5,10 @@ using Shared.Exeptions;
 
 namespace DatabaseLayer.Repositories;
 
-public class GameRepository
+public class GameRepository : IGameRepository
 {
 	private GameContext _gameContext;
-	private GameContextInMem _inMemGameContext;
-	private DbContextOptions<GameContext> options;
+    private DbContextOptions<GameContext> options;
 
 	public GameRepository(GameContext gameContext)
 	{

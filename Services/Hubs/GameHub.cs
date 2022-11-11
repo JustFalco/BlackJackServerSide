@@ -8,7 +8,12 @@ namespace Services.Hubs;
 
 public class GameHub : Hub
 {
-	private static GameController _gameController = new(new GameRepository(new GameContext()));
+    private static GameController _gameController;
+
+    public GameHub(GameController gameController)
+    {
+		_gameController = gameController;
+    }
 
 	public async Task JoinGame(string email, int gameId)
 	{

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using DatabaseLayer.Repositories;
+using GameLibrary.Controllers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Hubs;
@@ -16,7 +18,10 @@ public class Startup
 	public void ConfigureServices(IServiceCollection services)
 	{
 		services.AddSignalR();
-	}
+        services.AddMemoryCache();
+        services.AddScoped<GameController>();
+        services.AddScoped<IGameRepository, GameRepository>();
+    }
 
 	public void Configure(IApplicationBuilder app)
 	{
