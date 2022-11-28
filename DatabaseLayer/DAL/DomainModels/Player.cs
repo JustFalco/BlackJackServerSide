@@ -34,5 +34,10 @@ namespace DatabaseLayer.DAL.DomainModels
 
 			return null;
 		}
-	}
+
+        public override string ToString()
+        {
+            return "email: " + Email;
+        }
+    }
 }

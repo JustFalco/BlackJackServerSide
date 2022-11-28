@@ -43,7 +43,7 @@ public class GameRepository : IGameRepository
             .Include(g => g.PlayersInGame)
             .Include(g => g.Cards)
             .ToList().FirstOrDefault();
-        
+
         if (gameFromDatabase == null)
         {
             throw new NoEntitiesInDatabaseExeption("Could not find game in database");

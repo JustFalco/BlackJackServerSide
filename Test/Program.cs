@@ -27,9 +27,14 @@ class Program
 		connection.On("ReceiveMessage", (string arg1) =>
 		{
 			Console.WriteLine(arg1);
-		});
+        });
 
-		Console.ReadKey();
+        connection.On("ReceiveStartedMessage", (string arg1) =>
+        {
+            Console.WriteLine(arg1);
+        });
+
+        Console.ReadKey();
 	}
 
 	void testmethod()

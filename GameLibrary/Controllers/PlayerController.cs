@@ -8,22 +8,33 @@ using DatabaseLayer.Repositories;
 
 namespace GameLibrary.Controllers
 {
-	public class PlayerController
-	{
-		private PlayerRepository playerRepository;
+	public class PlayerController : IPlayerController
+    {
+        private readonly IPlayerRepository _repository;
 
-		public PlayerController(PlayerRepository repository)
-		{
-			playerRepository = repository;
-		}
+        public PlayerController(IPlayerRepository repository)
+        {
+            _repository = repository;
+        }
 
 		public void UserLogin(string email)
 		{
-			if (playerRepository.GetPlayerByEmail(email) == null)
+			if (_repository.GetPlayerByEmail(email) == null)
 			{
 				throw new Exception($"user with email {email} not found");
 			}
 		}
+
+        public Player NewPlayer(string email)
+        {
+            Player player = new Player
+            {
+                Email = email,
+				Name = email
+            };
+
+            return player;
+        }
 
 		public void Hit(Player player)
 		{

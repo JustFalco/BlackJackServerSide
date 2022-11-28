@@ -14,11 +14,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-/*builder.Services.AddCors(c => c.AddPolicy("AllowOrigin",
-    policyBuilder => policyBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().Build()));*/
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("http://127.0.0.1:8080")
+                .AllowAnyHeader()
+                .WithMethods("GET", "POST")
+                .AllowCredentials();
+        });
+});
 
 builder.Services.AddSignalR();
-builder.Services.AddScoped<GameController>();
+builder.Services.AddScoped<IGameController,GameController>();
+builder.Services.AddScoped<IPlayerController, PlayerController>();
+builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<GameHub>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 /*builder.Services.AddDbContext<GameContext>(
@@ -48,7 +59,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-/*app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().Build());*/
+app.UseCors();
 
 app.UseRouting();
 app.UseEndpoints(endpoints =>

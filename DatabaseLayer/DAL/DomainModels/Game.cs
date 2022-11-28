@@ -20,6 +20,25 @@ public class Game
 
     public int getCurrentPlayerId()
     {
-        return PlayersInGame.ElementAt(CurrentPlayerIndex).PlayerId;
+        return getCurrentPlayer().PlayerId;
+    }
+
+    public Player getCurrentPlayer()
+    {
+        return PlayersInGame.ElementAt(CurrentPlayerIndex);
+    }
+
+    public override string ToString()
+    {
+        string returnString = string.Empty;
+
+        returnString += "players: ";
+        foreach (var player in PlayersInGame)
+        {
+            returnString += "\n\t" + player;
+        }
+        
+
+        return returnString;
     }
 }
