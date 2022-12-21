@@ -1,11 +1,11 @@
 ﻿using DatabaseLayer.DAL.DomainModels;
+using Shared.DTOs;
 
 namespace GameLibrary.Controllers;
 
 public interface IPlayerController
 {
-    void UserLogin(string email);
-    Player NewPlayer(string email);
+    Task<Player> NewPlayer(PlayerDTO playerData);
     void Hit(Player player);
     void Stand(Player player);
     void Double(Player player);

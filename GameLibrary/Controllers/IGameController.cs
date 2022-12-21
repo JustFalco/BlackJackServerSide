@@ -5,9 +5,10 @@ namespace GameLibrary.Controllers;
 public interface IGameController
 {
     Game GetGame(int gameId);
-    void SaveGame(Game game);
+    Task<Game> SaveGame(Game game);
     bool CheckIfGameExists(int gameId);
     void ContinueGame(int gameId);
-    Game NewGame();
-    void AddPlayerToGame(int gameId, string email);
+    Task<Game> NewGame();
+    void AddPlayerToGame(Player player, int gameId);
+    Game PlayGame(string choice, int gameId);
 }

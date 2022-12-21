@@ -39,29 +39,29 @@ class Program
 
 	void testmethod()
 	{
-		Console.WriteLine("Hello, World!");
+		/*Console.WriteLine("Hello, World!");
 		Player player = new Player();
 		Game game = new Game();
 
 		GameContext gameContext = new GameContext();
-		PlayerRepository repository = new PlayerRepository(gameContext);
+		*//*PlayerRepository repository = new PlayerRepository(gameContext);*//*
 		GameRepository gameRepository = new GameRepository(gameContext);
 		Console.Write("Naam: ");
-		player.Name = Console.ReadLine();
+		player.UserName = Console.ReadLine();
 
 		Console.Write("Email: ");
 		player.Email = Console.ReadLine();
 
-		Console.WriteLine($"Hello {player.Name}");
+		Console.WriteLine($"Hello {player.UserName}");
 		repository.AddPlayerToDB(player);
 
 		game.PlayersInGame.Add(player);
-		/*game.cards = new CardDeck();
-		game.isActiveGame = true;*/
+		*//*game.cards = new CardDeck();
+		game.isActiveGame = true;*//*
 		gameRepository.SaveGameInDatabase(game);
 		Thread.Sleep(2000);
 
-		Console.WriteLine(repository.getAllPlayers());
+		Console.WriteLine(repository.getAllPlayers());*/
 	}
 }
 

@@ -5,35 +5,36 @@ using System.Text;
 using System.Threading.Tasks;
 using DatabaseLayer.DAL.DomainModels;
 using DatabaseLayer.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Shared.DTOs;
 
 namespace GameLibrary.Controllers
 {
 	public class PlayerController : IPlayerController
     {
         private readonly IPlayerRepository _repository;
+        private readonly UserManager<Player> _userManager;
+        private readonly SignInManager<Player> _signInManager;
 
-        public PlayerController(IPlayerRepository repository)
+        public PlayerController(IPlayerRepository repository, UserManager<Player> userManager, SignInManager<Player> signInManager)
         {
             _repository = repository;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-		public void UserLogin(string email)
-		{
-			if (_repository.GetPlayerByEmail(email) == null)
-			{
-				throw new Exception($"user with email {email} not found");
-			}
-		}
 
-        public Player NewPlayer(string email)
+        public async Task<Player> NewPlayer(PlayerDTO playerData)
         {
-            Player player = new Player
-            {
-                Email = email,
-				Name = email
-            };
+            Player newPlayer = new Player();
 
-            return player;
+			newPlayer.Email = playerData.Email;
+            newPlayer.PasswordHash = _userManager.PasswordHasher.HashPassword(newPlayer, playerData.Password);
+            newPlayer.UserName = playerData.Email;
+
+            var result = await _repository.AddPlayerToDB(newPlayer);
+
+            return result;
         }
 
 		public void Hit(Player player)
