@@ -10,7 +10,6 @@ public class Card
 	public CardType CardType { get; set; }
 	public bool IsHidden { get; set; }
 	public bool ActiveCard { get; set; } = true;
-
-	public List<CardDeck> CardInDecks { get; set; }
+	public List<CardDeck> CardDecks { get; set; }
 	public List<Hand> CardInHands { get; set; }
 }

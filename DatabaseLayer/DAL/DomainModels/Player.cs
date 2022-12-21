@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+
+
 namespace DatabaseLayer.DAL.DomainModels
 {
-	public class Player
-	{
-		public int PlayerId { get; set; }
-		public string Name { get; set; }
-
-		public string Email { get; set; }
-
-		public List<Hand> Hands { get; set; }
+	public class Player : IdentityUser<int>
+    {
+        public List<Hand> Hands { get; set; }
 
 		public List<Game> GamesPlayed { get; set; }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DatabaseLayer.DAL.Contexts;
 using DatabaseLayer.DAL.DomainModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Exeptions;
 using Shared.Utils;
@@ -13,45 +14,49 @@ namespace DatabaseLayer.Repositories
 {
 	public class PlayerRepository : IPlayerRepository
     {
-		private GameContext _gameContext;
+		private readonly PlayerContext _playerContext;
+        private readonly UserManager<Player> _userManager;
 
-		public PlayerRepository(GameContext playerContext)
+        public PlayerRepository(PlayerContext playerContext, UserManager<Player> userManager)
 		{
-			_gameContext = playerContext;
-			_gameContext.Database.EnsureCreated();
-			_gameContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+			_playerContext = playerContext;
+            _userManager = userManager;
+            playerContext.Database.EnsureCreated();
+            _playerContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 		}
 
-		public List<Player> getAllPlayers()
+		public async Task<IEnumerable<Player>> getAllPlayers()
 		{
-			return _gameContext.Players.ToList();
+			return await _playerContext.Players.ToListAsync();
 		}
 
-		public void AddPlayerToDB(Player player)
+		public async Task<Player> AddPlayerToDB(Player newPlayer)
 		{
-            if (string.IsNullOrEmpty(player.Email) || string.IsNullOrEmpty(player.Name))
+            if (await GetPlayerByEmail(newPlayer.Email) != null)
             {
-                throw new ArgumentNullException("player name and email cannot be empty");
+                throw new DuplicateObjectInDBExeption($"User with email {newPlayer.Email} already exists");
             }
-            if (!EmailValidator.Validate(player.Email))
+            
+            var result = await _userManager.CreateAsync(newPlayer);
+            if (result.Succeeded)
             {
-                throw new IllegalEmailExeption($"The email {player.Email} is illegal and cannot be used to search for players");
+                return newPlayer;
             }
-            if (GetPlayerByEmail(player.Email) != null)
+            else
             {
-                throw new DuplicateObjectInDBExeption($"User with email {player.Email} already exists");
+                //TODO geef errors terug
+                return null;
             }
-			_gameContext.Players.AddAsync(player);
-			_gameContext.SaveChanges();
-		}
 
-		public Player GetPlayerByEmail(string email)
+        }
+
+		public async Task<Player> GetPlayerByEmail(string email)
 		{
             if (!EmailValidator.Validate(email))
             {
                 throw new IllegalEmailExeption($"The email {email} is illegal and cannot be used to search for players");
             }
-			return _gameContext.Players.Where(p => p.Email == email).FirstOrDefault();
+			return _playerContext.Players.Where(p => p.Email == email).FirstOrDefault();
 		}
 
 	}

@@ -4,6 +4,6 @@ namespace DatabaseLayer.Repositories;
 
 public interface IGameRepository
 {
-    Task SaveGameInDatabase(Game game);
+    Task<Game> SaveGameInDatabase(Game game);
     Game? GetGameFromDatabase(int gameId);
 }

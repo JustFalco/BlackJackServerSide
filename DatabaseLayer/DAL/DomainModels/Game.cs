@@ -20,7 +20,7 @@ public class Game
 
     public int getCurrentPlayerId()
     {
-        return getCurrentPlayer().PlayerId;
+        return getCurrentPlayer().Id;
     }
 
     public Player getCurrentPlayer()

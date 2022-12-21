@@ -6,6 +6,26 @@ public class Hand
 	public bool IsActiveHand { get; set; }
 	public List<Card> cardsInHand { get; set; }
 
+    public List<string> getCurrentOptions()
+    {
+		List<string> options = new List<string>();
+
+		options.Add("stand");
+        if (CanSplit())
+        {
+			options.Add("split");
+        }
+        if (CanHit())
+        {
+            options.Add("split");
+        }
+        if (CanDouble())
+        {
+            options.Add("split");
+        }
+        return options;
+    }
+
 	public Hand()
 	{
 		cardsInHand = new List<Card>();

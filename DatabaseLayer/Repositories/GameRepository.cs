@@ -7,48 +7,57 @@ namespace DatabaseLayer.Repositories;
 
 public class GameRepository : IGameRepository
 {
-	private GameContext _gameContext;
-    private DbContextOptions<GameContext> options;
+    private readonly PlayerContext _playerContext;
 
-	public GameRepository(GameContext gameContext)
+    public GameRepository(PlayerContext playerContext)
 	{
-		_gameContext = gameContext;
-		_gameContext.Database.EnsureCreated();
-		_gameContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        _playerContext = playerContext;
+        _playerContext.Database.EnsureCreated();
+        _playerContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 	}
 
-	public async Task SaveGameInDatabase(Game game)
+	public async Task<Game> SaveGameInDatabase(Game game)
 	{
-        if (game == null || game.PlayersInGame.Count == 0 || game.Cards == null)
+        if (game == null)
         {
 			throw new ArgumentNullException(nameof(game));
         }
-		try
-		{
-			_gameContext.Games.AddAsync(game);
-			_gameContext.SaveChanges();
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
-			throw;
-		}
-		
-	}
+
+        _playerContext.Cards.AsNoTracking().AsNoTrackingWithIdentityResolution();
+
+        _playerContext.Games.Add(game);
+
+        _playerContext.Cards.AsNoTracking().AsNoTrackingWithIdentityResolution();
+
+        await _playerContext.SaveChangesAsync();
+        return game;
+    }
 
     public Game? GetGameFromDatabase(int gameId)
     {
-        Game gameFromDatabase = _gameContext.Games.Where(g => g.GameId == gameId)
-            .Include(g => g.Cards)
-            .Include(g => g.PlayersInGame)
-            .Include(g => g.Cards)
-            .ToList().FirstOrDefault();
 
-        if (gameFromDatabase == null)
+        Game gameFromDatabase = null;
+        try
         {
-            throw new NoEntitiesInDatabaseExeption("Could not find game in database");
+            gameFromDatabase = _playerContext.Games.Where(g => g.GameId == gameId)
+                .AsNoTracking()
+                .Include(g => g.Cards)
+                .Include(g => g.PlayersInGame)
+                .ToList().FirstOrDefault();
         }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
 
-        return gameFromDatabase;
+        if (gameFromDatabase != null)
+        {
+            return gameFromDatabase;
+        }
+        
+
+        throw new ArgumentException("Could not find game in database");
     }
 }

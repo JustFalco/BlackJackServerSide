@@ -4,7 +4,7 @@ namespace DatabaseLayer.Repositories;
 
 public interface IPlayerRepository
 {
-    List<Player> getAllPlayers();
-    void AddPlayerToDB(Player player);
-    Player GetPlayerByEmail(string email);
+    Task<IEnumerable<Player>> getAllPlayers();
+    Task<Player> AddPlayerToDB(Player newPlayer);
+    Task<Player> GetPlayerByEmail(string email);
 }
