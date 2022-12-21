@@ -4,8 +4,7 @@ namespace DatabaseLayer.DAL.DomainModels;
 
 public class Card
 {
-	public int CardId { get; set; }
-	public CardValue Value { get; set; }
+    public CardValue Value { get; set; }
 	public CardColor Color { get; set; }
 	public CardType CardType { get; set; }
 	public bool IsHidden { get; set; }

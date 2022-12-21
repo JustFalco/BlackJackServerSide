@@ -2,6 +2,7 @@
 using DatabaseLayer.DAL.DomainModels;
 using Microsoft.EntityFrameworkCore;
 using Shared.Exeptions;
+using System;
 
 namespace DatabaseLayer.Repositories;
 
@@ -23,13 +24,11 @@ public class GameRepository : IGameRepository
 			throw new ArgumentNullException(nameof(game));
         }
 
-        _playerContext.Cards.AsNoTracking().AsNoTrackingWithIdentityResolution();
-
+        _playerContext.Entry(game.Cards).State = EntityState.Unchanged;
         _playerContext.Games.Add(game);
 
-        _playerContext.Cards.AsNoTracking().AsNoTrackingWithIdentityResolution();
-
         await _playerContext.SaveChangesAsync();
+
         return game;
     }
 

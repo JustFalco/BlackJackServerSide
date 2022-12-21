@@ -16,7 +16,11 @@ public class Game
 		{
 			PlayersInGame = new List<Player>();
 		}
-	}
+        if (Cards == null)
+        {
+            Cards = new CardDeck();
+        }
+    }
 
     public int getCurrentPlayerId()
     {

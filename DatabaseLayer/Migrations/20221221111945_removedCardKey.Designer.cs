@@ -4,6 +4,7 @@ using DatabaseLayer.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(PlayerContext))]
-    partial class PlayerContextModelSnapshot : ModelSnapshot
+    [Migration("20221221111945_removedCardKey")]
+    partial class removedCardKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,27 +24,6 @@ namespace DatabaseLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CardCardDeck", b =>
-                {
-                    b.Property<int>("CardDecksCardDeckId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsCardType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsValue")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsColor")
-                        .HasColumnType("int");
-
-                    b.HasKey("CardDecksCardDeckId", "CardsCardType", "CardsValue", "CardsColor");
-
-                    b.HasIndex("CardsCardType", "CardsValue", "CardsColor");
-
-                    b.ToTable("CardCardDeck");
-                });
 
             modelBuilder.Entity("CardHand", b =>
                 {
@@ -517,6 +499,32 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("CardDecks");
                 });
 
+            modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.CardInCardDeck", b =>
+                {
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CardDeckId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CardColor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CardType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CardValue")
+                        .HasColumnType("int");
+
+                    b.HasKey("CardId", "CardDeckId");
+
+                    b.HasIndex("CardDeckId");
+
+                    b.HasIndex("CardType", "CardValue", "CardColor");
+
+                    b.ToTable("CardInDecks");
+                });
+
             modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.Game", b =>
                 {
                     b.Property<int>("GameId")
@@ -774,21 +782,6 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CardCardDeck", b =>
-                {
-                    b.HasOne("DatabaseLayer.DAL.DomainModels.CardDeck", null)
-                        .WithMany()
-                        .HasForeignKey("CardDecksCardDeckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseLayer.DAL.DomainModels.Card", null)
-                        .WithMany()
-                        .HasForeignKey("CardsCardType", "CardsValue", "CardsColor")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CardHand", b =>
                 {
                     b.HasOne("DatabaseLayer.DAL.DomainModels.Hand", null)
@@ -802,6 +795,25 @@ namespace DatabaseLayer.Migrations
                         .HasForeignKey("cardsInHandCardType", "cardsInHandValue", "cardsInHandColor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.CardInCardDeck", b =>
+                {
+                    b.HasOne("DatabaseLayer.DAL.DomainModels.CardDeck", "CardDeck")
+                        .WithMany()
+                        .HasForeignKey("CardDeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseLayer.DAL.DomainModels.Card", "Card")
+                        .WithMany()
+                        .HasForeignKey("CardType", "CardValue", "CardColor")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Card");
+
+                    b.Navigation("CardDeck");
                 });
 
             modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.Game", b =>

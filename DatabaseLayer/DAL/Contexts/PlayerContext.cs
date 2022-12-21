@@ -15,7 +15,6 @@ public class PlayerContext : IdentityDbContext<Player, IdentityRole<int>, int>
     public DbSet<CardDeck> CardDecks { get; set; }
     public DbSet<Hand> Hands { get; set; }
     public DbSet<Game> Games { get; set; }
-/*    public DbSet<CardInCardDeck> CardInDecks { get; set; }*/
 
     public PlayerContext()
     {
@@ -38,10 +37,6 @@ public class PlayerContext : IdentityDbContext<Player, IdentityRole<int>, int>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-/*        modelBuilder.Entity<CardInCardDeck>().HasKey(t => new { t.CardId, t.CardDeckId });
-        modelBuilder.Entity<CardInCardDeck>().HasOne(cicd => cicd.Card).WithMany(c => c.CardDecks).HasForeignKey(cicd => cicd.CardId);
-        modelBuilder.Entity<CardInCardDeck>().HasOne(cicd => cicd.CardDeck).WithMany(cd => cd.Deck).HasForeignKey(cicd => cicd.CardDeckId);*/
 
         modelBuilder.ApplyConfiguration(new PlayerConfiguration());
         modelBuilder.ApplyConfiguration(new CardConfiguration());

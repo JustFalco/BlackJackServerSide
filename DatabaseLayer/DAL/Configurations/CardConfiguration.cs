@@ -8,7 +8,8 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
 {
 	public void Configure(EntityTypeBuilder<Card> builder)
     {
-        int id = 1;
+        builder.HasAlternateKey(k => new { k.CardType, k.Value, k.Color });
+
         foreach (Enum type in Enum.GetValues(typeof(CardType)))
         {
             foreach (Enum value in Enum.GetValues(typeof(CardValue)))
@@ -26,7 +27,6 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
 
                 Card card = new Card
                 {
-                    CardId = id,
                     ActiveCard = true,
                     CardType = (CardType)type,
                     Value = (CardValue)value,
@@ -34,10 +34,10 @@ public class CardConfiguration : IEntityTypeConfiguration<Card>
                 };
 
                 builder.HasData(card);
-                id++;
+              
             }
 
-            
+
         }
     }
 }
