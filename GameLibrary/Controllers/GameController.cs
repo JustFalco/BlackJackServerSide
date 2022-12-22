@@ -30,7 +30,7 @@ namespace GameLibrary.Controllers
             _cardDeckRepository = cardDeckRepository;
         }
 
-        public Game GetGame(int gameId)
+        public async Task<Game> GetGame(int gameId)
         {
             //TODO ik voorzie problemen met het ophalen van een game op basis van gameid ivb met het fijt dat gameid automatisch aangemaakt wordt
             Game game = null;
@@ -42,7 +42,7 @@ namespace GameLibrary.Controllers
 
             try
             {
-                game = _gameRepository.GetGameFromDatabase(gameId);
+                game = await _gameRepository.GetGameFromDatabase(gameId);
             }
             catch (Exception e)
             {
@@ -63,15 +63,14 @@ namespace GameLibrary.Controllers
         {
             try
             {
-                /*_cache.Set(game.GameId, game);*/
+                _cache.Set(game.GameId, game);
                 var result = await _gameRepository.SaveGameInDatabase(game);
                 Console.WriteLine("Saving game");
-                if (result != null)
+                if (result == null)
                 {
-                    return result;
+                    throw new Exception("Game not saved");
                 }
-
-                throw new Exception("Game not saved");
+                return result;
             }
             catch (Exception e)
             {
@@ -96,45 +95,15 @@ namespace GameLibrary.Controllers
             throw new NotImplementedException();
 		}
 
-		public async Task<Game> NewGame()
-		{
-            Game game = new Game();
-            game.IsActiveGame = true;
 
-            
-
-            List<Card> tempCards = new List<Card>();
-
-            foreach (var c in _cardRepository.GetAllAsync().Result)
-            {
-                tempCards.Add(c);
-            }
-
-            game.Cards.Cards = tempCards;
-
-            game.Cards.ShuffleDeck();
-            await _cardDeckRepository.SaveDeck(game.Cards);
-
-            SaveGame(game);
-            return game;
+		public async Task<Player> AddPlayerToGame(Player player, Game game)
+        {
+            return await _gameRepository.AddPlayerToGame(game, player);
         }
 
-		public async void AddPlayerToGame(Player player, int gameId)
+        public async Task<Game> PlayGame(string choice, int gameId)
         {
-            if (player == null)
-            {
-                throw new NullReferenceException("Cannot find player");
-            }
-
-            Game game = GetGame(gameId);
-            game.PlayersInGame.Add(player);
-
-            SaveGame(game);
-        }
-
-        public Game PlayGame(string choice, int gameId)
-        {
-            Game game = GetGame(gameId);
+            Game game = await GetGame(gameId);
             switch (choice)
             {
                 case "double":

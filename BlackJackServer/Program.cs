@@ -64,7 +64,7 @@ builder.Services.AddTransient<ICardDeckRepository, CardDeckRepository>();
 
 
 builder.Services.AddDbContext<PlayerContext>(
-    options => options.UseSqlServer("Server=.; Database=BlackJackUsers; Trusted_Connection=True; trustServerCertificate=true")
+    options => options.UseSqlServer("Server=.; Database=BlackJackUsers; Trusted_Connection=True; trustServerCertificate=true"), ServiceLifetime.Transient
 );
 
 /*builder.Services.AddDbContext<GameContext>();*/

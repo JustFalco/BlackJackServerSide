@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DatabaseLayer.Migrations
 {
     /// <inheritdoc />
@@ -68,18 +70,15 @@ namespace DatabaseLayer.Migrations
                 name: "Cards",
                 columns: table => new
                 {
-                    CardId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     Value = table.Column<int>(type: "int", nullable: false),
                     Color = table.Column<int>(type: "int", nullable: false),
                     CardType = table.Column<int>(type: "int", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false),
-                    ActiveCard = table.Column<bool>(type: "bit", nullable: false),
-                    CardDeckId = table.Column<int>(type: "int", nullable: false)
+                    ActiveCard = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cards", x => x.CardId);
+                    table.PrimaryKey("PK_Cards", x => new { x.CardType, x.Value, x.Color });
                 });
 
             migrationBuilder.CreateTable(
@@ -227,11 +226,13 @@ namespace DatabaseLayer.Migrations
                 columns: table => new
                 {
                     CardDecksCardDeckId = table.Column<int>(type: "int", nullable: false),
-                    CardsCardId = table.Column<int>(type: "int", nullable: false)
+                    CardsCardType = table.Column<int>(type: "int", nullable: false),
+                    CardsValue = table.Column<int>(type: "int", nullable: false),
+                    CardsColor = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardCardDeck", x => new { x.CardDecksCardDeckId, x.CardsCardId });
+                    table.PrimaryKey("PK_CardCardDeck", x => new { x.CardDecksCardDeckId, x.CardsCardType, x.CardsValue, x.CardsColor });
                     table.ForeignKey(
                         name: "FK_CardCardDeck_CardDecks_CardDecksCardDeckId",
                         column: x => x.CardDecksCardDeckId,
@@ -239,10 +240,10 @@ namespace DatabaseLayer.Migrations
                         principalColumn: "CardDeckId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CardCardDeck_Cards_CardsCardId",
-                        column: x => x.CardsCardId,
+                        name: "FK_CardCardDeck_Cards_CardsCardType_CardsValue_CardsColor",
+                        columns: x => new { x.CardsCardType, x.CardsValue, x.CardsColor },
                         principalTable: "Cards",
-                        principalColumn: "CardId",
+                        principalColumns: new[] { "CardType", "Value", "Color" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -251,16 +252,18 @@ namespace DatabaseLayer.Migrations
                 columns: table => new
                 {
                     CardInHandsHandId = table.Column<int>(type: "int", nullable: false),
-                    cardsInHandCardId = table.Column<int>(type: "int", nullable: false)
+                    cardsInHandCardType = table.Column<int>(type: "int", nullable: false),
+                    cardsInHandValue = table.Column<int>(type: "int", nullable: false),
+                    cardsInHandColor = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardHand", x => new { x.CardInHandsHandId, x.cardsInHandCardId });
+                    table.PrimaryKey("PK_CardHand", x => new { x.CardInHandsHandId, x.cardsInHandCardType, x.cardsInHandValue, x.cardsInHandColor });
                     table.ForeignKey(
-                        name: "FK_CardHand_Cards_cardsInHandCardId",
-                        column: x => x.cardsInHandCardId,
+                        name: "FK_CardHand_Cards_cardsInHandCardType_cardsInHandValue_cardsInHandColor",
+                        columns: x => new { x.cardsInHandCardType, x.cardsInHandValue, x.cardsInHandColor },
                         principalTable: "Cards",
-                        principalColumn: "CardId",
+                        principalColumns: new[] { "CardType", "Value", "Color" },
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CardHand_Hands_CardInHandsHandId",
@@ -292,6 +295,65 @@ namespace DatabaseLayer.Migrations
                         principalTable: "Games",
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cards",
+                columns: new[] { "CardType", "Color", "Value", "ActiveCard", "IsHidden" },
+                values: new object[,]
+                {
+                    { 0, 0, 0, true, false },
+                    { 0, 0, 1, true, false },
+                    { 0, 0, 2, true, false },
+                    { 0, 0, 3, true, false },
+                    { 0, 0, 4, true, false },
+                    { 0, 0, 5, true, false },
+                    { 0, 0, 6, true, false },
+                    { 0, 0, 7, true, false },
+                    { 0, 0, 8, true, false },
+                    { 0, 0, 9, true, false },
+                    { 0, 0, 10, true, false },
+                    { 0, 0, 11, true, false },
+                    { 0, 0, 12, true, false },
+                    { 1, 1, 0, true, false },
+                    { 1, 1, 1, true, false },
+                    { 1, 1, 2, true, false },
+                    { 1, 1, 3, true, false },
+                    { 1, 1, 4, true, false },
+                    { 1, 1, 5, true, false },
+                    { 1, 1, 6, true, false },
+                    { 1, 1, 7, true, false },
+                    { 1, 1, 8, true, false },
+                    { 1, 1, 9, true, false },
+                    { 1, 1, 10, true, false },
+                    { 1, 1, 11, true, false },
+                    { 1, 1, 12, true, false },
+                    { 2, 0, 0, true, false },
+                    { 2, 0, 1, true, false },
+                    { 2, 0, 2, true, false },
+                    { 2, 0, 3, true, false },
+                    { 2, 0, 4, true, false },
+                    { 2, 0, 5, true, false },
+                    { 2, 0, 6, true, false },
+                    { 2, 0, 7, true, false },
+                    { 2, 0, 8, true, false },
+                    { 2, 0, 9, true, false },
+                    { 2, 0, 10, true, false },
+                    { 2, 0, 11, true, false },
+                    { 2, 0, 12, true, false },
+                    { 3, 1, 0, true, false },
+                    { 3, 1, 1, true, false },
+                    { 3, 1, 2, true, false },
+                    { 3, 1, 3, true, false },
+                    { 3, 1, 4, true, false },
+                    { 3, 1, 5, true, false },
+                    { 3, 1, 6, true, false },
+                    { 3, 1, 7, true, false },
+                    { 3, 1, 8, true, false },
+                    { 3, 1, 9, true, false },
+                    { 3, 1, 10, true, false },
+                    { 3, 1, 11, true, false },
+                    { 3, 1, 12, true, false }
                 });
 
             migrationBuilder.CreateIndex(
@@ -334,14 +396,14 @@ namespace DatabaseLayer.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardCardDeck_CardsCardId",
+                name: "IX_CardCardDeck_CardsCardType_CardsValue_CardsColor",
                 table: "CardCardDeck",
-                column: "CardsCardId");
+                columns: new[] { "CardsCardType", "CardsValue", "CardsColor" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardHand_cardsInHandCardId",
+                name: "IX_CardHand_cardsInHandCardType_cardsInHandValue_cardsInHandColor",
                 table: "CardHand",
-                column: "cardsInHandCardId");
+                columns: new[] { "cardsInHandCardType", "cardsInHandValue", "cardsInHandColor" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_GamePlayer_PlayersInGameId",

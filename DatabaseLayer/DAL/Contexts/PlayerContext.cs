@@ -12,7 +12,6 @@ public class PlayerContext : IdentityDbContext<Player, IdentityRole<int>, int>
 
     public DbSet<Player> Players { get; set; }
     public DbSet<Card> Cards { get; set; }
-    public DbSet<CardDeck> CardDecks { get; set; }
     public DbSet<Hand> Hands { get; set; }
     public DbSet<Game> Games { get; set; }
 
@@ -38,9 +37,45 @@ public class PlayerContext : IdentityDbContext<Player, IdentityRole<int>, int>
     {
         base.OnModelCreating(modelBuilder);
 
+        int id = 1;
+
+        for (int i = 0; i < 8; i++)
+        {
+            foreach (Enum type in Enum.GetValues(typeof(CardType)))
+            {
+                foreach (Enum value in Enum.GetValues(typeof(CardValue)))
+                {
+                    CardColor color;
+
+                    if ((CardType)type == CardType.SPADES || (CardType)type == CardType.CLUBS)
+                    {
+                        color = CardColor.BLACK;
+                    }
+                    else
+                    {
+                        color = CardColor.RED;
+                    }
+
+                    Card card = new Card
+                    {
+                        Id = id,
+                        CardType = (CardType)type,
+                        Value = (CardValue)value,
+                        Color = color
+                    };
+
+                    modelBuilder.Entity<Card>().HasData(card);
+                    
+
+                    id++;
+
+                }
+
+
+            }
+        }
+
         modelBuilder.ApplyConfiguration(new PlayerConfiguration());
-        modelBuilder.ApplyConfiguration(new CardConfiguration());
-        modelBuilder.ApplyConfiguration(new CardDeckConfiguration());
         modelBuilder.ApplyConfiguration(new HandConfiguration());
         modelBuilder.ApplyConfiguration(new GameConfiguration());
     }

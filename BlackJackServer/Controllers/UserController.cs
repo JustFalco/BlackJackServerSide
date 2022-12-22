@@ -61,6 +61,11 @@ namespace BlackJackServer.Controllers
             {
                 Console.WriteLine("Model is good!");
 
+                if (Teapot(player.Email))
+                {
+                    return StatusCode(418);
+                }
+
                 var userExists = await _userManager.FindByEmailAsync(player.Email);
                 if (userExists != null)
                     return BadRequest("User already exists!");
@@ -82,7 +87,7 @@ namespace BlackJackServer.Controllers
            
             
 
-            return Ok("Lekker pik");
+            return Ok(new LoginResult { Successful = true, Email = player.Email});
         }
 
         // POST api/user/login
@@ -93,6 +98,12 @@ namespace BlackJackServer.Controllers
             if (ModelState.IsValid)
             {
                 Console.WriteLine("Model is good!");
+
+                if (Teapot(player.Email))
+                {
+                    return StatusCode(418);
+                }
+
                 var result = await _userManager.FindByEmailAsync(player.Email);
                 if (result == null)
                     return NotFound();
@@ -123,7 +134,7 @@ namespace BlackJackServer.Controllers
                     signingCredentials: creds
                 );
 
-                return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token)});
+                return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token), Email = player.Email});
 
             }
             else
@@ -139,16 +150,9 @@ namespace BlackJackServer.Controllers
 
         }
 
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        private bool Teapot(string Input)
         {
-        }
-
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Input.ToLower() == "teapot@teapot.teapot";
         }
     }
 }

@@ -15,7 +15,7 @@ public class CardDeckRepository : ICardDeckRepository
 
     public async Task<CardDeck> SaveDeck(CardDeck cardDeck)
     {
-        _playerContext.CardDecks.Add(cardDeck);
+        
         await _playerContext.SaveChangesAsync();
         return cardDeck;
     }

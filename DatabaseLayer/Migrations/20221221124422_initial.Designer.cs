@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(PlayerContext))]
-    [Migration("20221221095340_changedDeckMechganism")]
-    partial class changedDeckMechganism
+    [Migration("20221221124422_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,12 +30,18 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("CardDecksCardDeckId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CardsCardId")
+                    b.Property<int>("CardsCardType")
                         .HasColumnType("int");
 
-                    b.HasKey("CardDecksCardDeckId", "CardsCardId");
+                    b.Property<int>("CardsValue")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CardsCardId");
+                    b.Property<int>("CardsColor")
+                        .HasColumnType("int");
+
+                    b.HasKey("CardDecksCardDeckId", "CardsCardType", "CardsValue", "CardsColor");
+
+                    b.HasIndex("CardsCardType", "CardsValue", "CardsColor");
 
                     b.ToTable("CardCardDeck");
                 });
@@ -45,511 +51,459 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("CardInHandsHandId")
                         .HasColumnType("int");
 
-                    b.Property<int>("cardsInHandCardId")
+                    b.Property<int>("cardsInHandCardType")
                         .HasColumnType("int");
 
-                    b.HasKey("CardInHandsHandId", "cardsInHandCardId");
+                    b.Property<int>("cardsInHandValue")
+                        .HasColumnType("int");
 
-                    b.HasIndex("cardsInHandCardId");
+                    b.Property<int>("cardsInHandColor")
+                        .HasColumnType("int");
+
+                    b.HasKey("CardInHandsHandId", "cardsInHandCardType", "cardsInHandValue", "cardsInHandColor");
+
+                    b.HasIndex("cardsInHandCardType", "cardsInHandValue", "cardsInHandColor");
 
                     b.ToTable("CardHand");
                 });
 
             modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.Card", b =>
                 {
-                    b.Property<int>("CardId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("CardType")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardId"));
-
-                    b.Property<bool>("ActiveCard")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CardType")
+                    b.Property<int>("Value")
                         .HasColumnType("int");
 
                     b.Property<int>("Color")
                         .HasColumnType("int");
 
+                    b.Property<bool>("ActiveCard")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsHidden")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("CardId");
+                    b.HasKey("CardType", "Value", "Color");
 
                     b.ToTable("Cards");
 
                     b.HasData(
                         new
                         {
-                            CardId = 1,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 0,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 0
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 2,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 1,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 1
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 3,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 2,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 2
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 4,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 3,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 3
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 5,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 4,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 4
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 6,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 5,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 5
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 7,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 6,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 6
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 8,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 7,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 7
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 9,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 8,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 8
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 10,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 9,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 9
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 11,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 10,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 10
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 12,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 11,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 11
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 13,
-                            ActiveCard = true,
                             CardType = 0,
+                            Value = 12,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 12
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 14,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 0,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 0
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 15,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 1,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 1
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 16,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 2,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 2
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 17,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 3,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 3
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 18,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 4,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 4
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 19,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 5,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 5
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 20,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 6,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 6
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 21,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 7,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 7
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 22,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 8,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 8
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 23,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 9,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 9
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 24,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 10,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 10
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 25,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 11,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 11
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 26,
-                            ActiveCard = true,
                             CardType = 1,
+                            Value = 12,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 12
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 27,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 0,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 0
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 28,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 1,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 1
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 29,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 2,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 2
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 30,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 3,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 3
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 31,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 4,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 4
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 32,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 5,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 5
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 33,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 6,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 6
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 34,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 7,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 7
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 35,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 8,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 8
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 36,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 9,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 9
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 37,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 10,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 10
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 38,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 11,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 11
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 39,
-                            ActiveCard = true,
                             CardType = 2,
+                            Value = 12,
                             Color = 0,
-                            IsHidden = false,
-                            Value = 12
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 40,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 0,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 0
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 41,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 1,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 1
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 42,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 2,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 2
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 43,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 3,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 3
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 44,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 4,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 4
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 45,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 5,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 5
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 46,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 6,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 6
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 47,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 7,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 7
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 48,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 8,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 8
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 49,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 9,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 9
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 50,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 10,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 10
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 51,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 11,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 11
+                            ActiveCard = true,
+                            IsHidden = false
                         },
                         new
                         {
-                            CardId = 52,
-                            ActiveCard = true,
                             CardType = 3,
+                            Value = 12,
                             Color = 1,
-                            IsHidden = false,
-                            Value = 12
+                            ActiveCard = true,
+                            IsHidden = false
                         });
                 });
 
@@ -833,7 +787,7 @@ namespace DatabaseLayer.Migrations
 
                     b.HasOne("DatabaseLayer.DAL.DomainModels.Card", null)
                         .WithMany()
-                        .HasForeignKey("CardsCardId")
+                        .HasForeignKey("CardsCardType", "CardsValue", "CardsColor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -848,7 +802,7 @@ namespace DatabaseLayer.Migrations
 
                     b.HasOne("DatabaseLayer.DAL.DomainModels.Card", null)
                         .WithMany()
-                        .HasForeignKey("cardsInHandCardId")
+                        .HasForeignKey("cardsInHandCardType", "cardsInHandValue", "cardsInHandColor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

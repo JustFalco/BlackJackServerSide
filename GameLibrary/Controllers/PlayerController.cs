@@ -15,12 +15,14 @@ namespace GameLibrary.Controllers
         private readonly IPlayerRepository _repository;
         private readonly UserManager<Player> _userManager;
         private readonly SignInManager<Player> _signInManager;
+        private readonly IGameRepository _gameRepository;
 
-        public PlayerController(IPlayerRepository repository, UserManager<Player> userManager, SignInManager<Player> signInManager)
+        public PlayerController(IPlayerRepository repository, UserManager<Player> userManager, SignInManager<Player> signInManager, IGameRepository gameRepository)
         {
             _repository = repository;
             _userManager = userManager;
             _signInManager = signInManager;
+            _gameRepository = gameRepository;
         }
 
 
@@ -40,17 +42,15 @@ namespace GameLibrary.Controllers
 		public void Hit(Player player)
 		{
 			if (player.GetFirstActiveHand().CanHit())
-			{
-
-			}
-			throw new NotImplementedException();
-		}
+            {
+                player.GetFirstActiveHand().cardsInHand.Add(_gameRepository.GetRandomCard());
+            }
+        }
 
 		public void Stand(Player player)
 		{
 			player.GetFirstActiveHand().StandBust();
-			throw new NotImplementedException();
-		}
+        }
 
 		public void Double(Player player)
 		{

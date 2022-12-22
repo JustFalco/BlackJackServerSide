@@ -11,8 +11,6 @@ public class CardDeck
     public List<Card> Cards { get; set; }
 
 
-    public int previousIndex = 0;
-
     public CardDeck()
 	{
 		if (Cards == null)
@@ -35,13 +33,6 @@ public class CardDeck
 		Cards = Cards.OrderBy(item => rnd.Next()).ToList();
 	}
 
-    public Card? GetFirstActiveCardOnDeck()
-	{
-		//TODO dit gaat voor errors zorgen
-		Card card = Cards.Where(card => card.ActiveCard == true).First();
-		card.ActiveCard = false;
-		return card;
-	}
 }
 
 public enum CardColor
@@ -60,7 +51,8 @@ public enum CardType
 
 public enum CardValue
 {
-	TWO,
+    ACE,
+    TWO,
 	THREE,
 	FOUR,
 	FIVE,
@@ -71,6 +63,6 @@ public enum CardValue
 	TEN,
 	JACK,
 	QUEEN,
-	KING,
-	ACE
+	KING
+	
 }

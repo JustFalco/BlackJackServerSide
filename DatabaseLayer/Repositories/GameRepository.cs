@@ -15,48 +15,69 @@ public class GameRepository : IGameRepository
         _playerContext = playerContext;
         _playerContext.Database.EnsureCreated();
         _playerContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-	}
+    }
 
-	public async Task<Game> SaveGameInDatabase(Game game)
+    public async Task<IEnumerable<Card>> GetAllCardsAsync()
+    {
+        var result = _playerContext.Cards
+            .ToListAsync();
+        return await result;
+    }
+
+    public async Task<Game> SaveGameInDatabase(Game game)
 	{
         if (game == null)
         {
 			throw new ArgumentNullException(nameof(game));
         }
 
-        _playerContext.Entry(game.Cards).State = EntityState.Unchanged;
         _playerContext.Games.Add(game);
-
         await _playerContext.SaveChangesAsync();
 
         return game;
     }
 
-    public Game? GetGameFromDatabase(int gameId)
+    public async Task<Game> GetGameFromDatabase(int gameId)
     {
-
-        Game gameFromDatabase = null;
         try
         {
-            gameFromDatabase = _playerContext.Games.Where(g => g.GameId == gameId)
+            var result = await _playerContext.Games.Where(g => g.GameId == gameId)
+                .Include(game => game.PlayersInGame)
                 .AsNoTracking()
-                .Include(g => g.Cards)
-                .Include(g => g.PlayersInGame)
-                .ToList().FirstOrDefault();
+                .AsNoTrackingWithIdentityResolution()
+                .ToListAsync();
+
+            if (result.Count == 0 || result.Count > 2)
+            {
+                throw new ArgumentException("Could not find game in database");
+            }
+
+            return result.First();
+
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
-        
+    }
 
-        if (gameFromDatabase != null)
-        {
-            return gameFromDatabase;
-        }
-        
 
-        throw new ArgumentException("Could not find game in database");
+    public async Task<Player> AddPlayerToGame(Game game, Player player)
+    {
+        game.PlayersInGame.Add(player);
+
+        await _playerContext.SaveChangesAsync();
+        return player;
+    }
+
+    public Card GetRandomCard()
+    {
+        Random numGen = new Random();
+        int min = _playerContext.Cards.OrderBy(c => c.Id).First().Id;
+        int max = _playerContext.Cards.OrderBy(c => c.Id).Last().Id;
+
+        return _playerContext.Cards.Where(c => c.Id == numGen.NextInt64(min, max)).First();
+
     }
 }

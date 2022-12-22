@@ -5,7 +5,7 @@ public class Game
 	public int GameId { get; set; }
 	//private Dealer dealer;
 	public List<Player> PlayersInGame { get; set; }
-	public CardDeck Cards { get; set; }
+
 	public bool IsActiveGame { get; set; }
 
 	public int CurrentPlayerIndex { get; set; }
@@ -16,10 +16,7 @@ public class Game
 		{
 			PlayersInGame = new List<Player>();
 		}
-        if (Cards == null)
-        {
-            Cards = new CardDeck();
-        }
+       
     }
 
     public int getCurrentPlayerId()

@@ -14,12 +14,5 @@ public class CardRepository : ICardRepository
         _playerContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
-    public async Task<IEnumerable<Card>> GetAllAsync()
-    {
-        var result = _playerContext.Cards
-            .AsNoTracking()
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync();
-        return await result;
-    }
+    
 }

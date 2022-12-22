@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(PlayerContext))]
-    [Migration("20221221085213_initial")]
-    partial class initial
+    [Migration("20221221125612_noFsGiven")]
+    partial class noFsGiven
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,12 +30,18 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("CardDecksCardDeckId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CardsCardId")
+                    b.Property<int>("CardsCardType")
                         .HasColumnType("int");
 
-                    b.HasKey("CardDecksCardDeckId", "CardsCardId");
+                    b.Property<int>("CardsValue")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CardsCardId");
+                    b.Property<int>("CardsColor")
+                        .HasColumnType("int");
+
+                    b.HasKey("CardDecksCardDeckId", "CardsCardType", "CardsValue", "CardsColor");
+
+                    b.HasIndex("CardsCardType", "CardsValue", "CardsColor");
 
                     b.ToTable("CardCardDeck");
                 });
@@ -45,43 +51,40 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("CardInHandsHandId")
                         .HasColumnType("int");
 
-                    b.Property<int>("cardsInHandCardId")
+                    b.Property<int>("cardsInHandCardType")
                         .HasColumnType("int");
 
-                    b.HasKey("CardInHandsHandId", "cardsInHandCardId");
+                    b.Property<int>("cardsInHandValue")
+                        .HasColumnType("int");
 
-                    b.HasIndex("cardsInHandCardId");
+                    b.Property<int>("cardsInHandColor")
+                        .HasColumnType("int");
+
+                    b.HasKey("CardInHandsHandId", "cardsInHandCardType", "cardsInHandValue", "cardsInHandColor");
+
+                    b.HasIndex("cardsInHandCardType", "cardsInHandValue", "cardsInHandColor");
 
                     b.ToTable("CardHand");
                 });
 
             modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.Card", b =>
                 {
-                    b.Property<int>("CardId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardId"));
-
-                    b.Property<bool>("ActiveCard")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("CardDeckId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CardType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
                         .HasColumnType("int");
 
                     b.Property<int>("Color")
                         .HasColumnType("int");
 
+                    b.Property<bool>("ActiveCard")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsHidden")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("CardId");
+                    b.HasKey("CardType", "Value", "Color");
 
                     b.ToTable("Cards");
                 });
@@ -366,7 +369,7 @@ namespace DatabaseLayer.Migrations
 
                     b.HasOne("DatabaseLayer.DAL.DomainModels.Card", null)
                         .WithMany()
-                        .HasForeignKey("CardsCardId")
+                        .HasForeignKey("CardsCardType", "CardsValue", "CardsColor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -381,7 +384,7 @@ namespace DatabaseLayer.Migrations
 
                     b.HasOne("DatabaseLayer.DAL.DomainModels.Card", null)
                         .WithMany()
-                        .HasForeignKey("cardsInHandCardId")
+                        .HasForeignKey("cardsInHandCardType", "cardsInHandValue", "cardsInHandColor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

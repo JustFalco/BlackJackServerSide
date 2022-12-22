@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using DatabaseLayer.DAL.Contexts;
 using DatabaseLayer.DAL.DomainModels;
@@ -30,24 +31,24 @@ public class GameHub : Hub
         Game game = null;
         try
         {
-            game = await _gameController.NewGame();
-            if (game == null)
-            {
-                throw new ArgumentException("Game cannot be null");
-            }
+            game = new Game();
+            game.IsActiveGame = true;
+            game = await _gameController.SaveGame(game);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            await Clients.Caller.SendAsync("Error", "Could not create or save new game");
+            await Clients.Caller.SendAsync("Error", "Could not create new game");
         }
 
         try
         {
             var player = await _userManager.FindByEmailAsync(Context.UserIdentifier);
-            _gameController.AddPlayerToGame(player, game.GameId);
-            await Groups.AddToGroupAsync(Context.ConnectionId, game.GameId.ToString());
             await Clients.Caller.SendAsync("ReceiveCreatedMessage", player, game);
+            await _gameController.AddPlayerToGame(player, game);
+            await Groups.AddToGroupAsync(Context.ConnectionId, game.GameId.ToString());
+            
+            await Clients.Group(game.GameId.ToString()).SendAsync("ReceiveMessage", $"{player.Email} has joined, waiting to start");
         }
         catch (Exception e)
         {
@@ -63,15 +64,21 @@ public class GameHub : Hub
         Console.WriteLine("Joining the game");
         try
         {
+            Game game = await _gameController.GetGame(gameId);
             await Groups.AddToGroupAsync(Context.ConnectionId, gameId.ToString());
+            
             var player = await _userManager.FindByEmailAsync(Context.UserIdentifier);
-            _gameController.AddPlayerToGame(player, gameId);
+            if (game.PlayersInGame.Any(p => p.Email == player.Email))
+            {
+                throw new Exception($"Player with email {player.Email} is already in this game");
+            }
+            await _gameController.AddPlayerToGame(player, game);
             await Clients.Group(gameId.ToString()).SendAsync("ReceiveMessage", $"{player.Email} has joined, waiting to start");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            await Clients.Group(gameId.ToString()).SendAsync("Error", e.Message);
+            await Clients.Caller.SendAsync("Error", e.Message);
         }
         
 	}
@@ -82,9 +89,10 @@ public class GameHub : Hub
         Console.WriteLine("Starting the game");
         try
         {
-            var game = _gameController.GetGame(gameId);
+            Game game = await _gameController.GetGame(gameId);
+            await Clients.Group(gameId.ToString()).SendAsync("CurrentGameMessage", game, "current game");
             await Clients.Group(gameId.ToString()).SendAsync("ReceiveStartedMessage", "Game has started!");
-            await Clients.Group(gameId.ToString()).SendAsync("CurrentUser", game.getCurrentPlayer(), game.getCurrentPlayer().GetFirstActiveHand().getCurrentOptions());
+            await Clients.Group(gameId.ToString()).SendAsync("CurrentUser", game.getCurrentPlayer().Email, game.getCurrentPlayer().GetFirstActiveHand().getCurrentOptions());
         }
         catch (Exception e)
         {
@@ -97,15 +105,24 @@ public class GameHub : Hub
     [Authorize]
     public async Task UserChoice(string choice, int gameId)
     {
-        var game = _gameController.GetGame(gameId);
-        var player = await _userManager.FindByEmailAsync(Context.UserIdentifier);
-
-        if (game.getCurrentPlayer().Id == player.Id)
+        try
         {
-            game = _gameController.PlayGame(choice, gameId);
-        }
+            var game = await _gameController.GetGame(gameId);
+            var player = await _userManager.FindByEmailAsync(Context.UserIdentifier);
 
-        await Clients.Group(gameId.ToString()).SendAsync("CurrentUser", game.getCurrentPlayer(), game.getCurrentPlayer().GetFirstActiveHand().getCurrentOptions());
-        await Clients.Group(gameId.ToString()).SendAsync("CurrentGame", game);
+            if (game.getCurrentPlayer().Id == player.Id)
+            {
+                game = await _gameController.PlayGame(choice, gameId);
+            }
+
+            await Clients.Group(gameId.ToString()).SendAsync("CurrentUser", game.getCurrentPlayer(), game.getCurrentPlayer().GetFirstActiveHand().getCurrentOptions());
+            await Clients.Group(gameId.ToString()).SendAsync("CurrentGame", game);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            await Clients.Group(gameId.ToString()).SendAsync("Error", e.Message);
+        }
+        
     }
 }
