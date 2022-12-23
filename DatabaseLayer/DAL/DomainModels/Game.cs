@@ -10,6 +10,7 @@ public class Game
 
 	public int CurrentPlayerIndex { get; set; }
 
+
     public Game()
 	{
 		if (PlayersInGame == null)
@@ -24,9 +25,15 @@ public class Game
         return getCurrentPlayer().Id;
     }
 
-    public Player getCurrentPlayer()
+    public Player? getCurrentPlayer()
     {
-        return PlayersInGame.ElementAt(CurrentPlayerIndex);
+        foreach (var player in PlayersInGame)
+        {
+            if (player.GetFirstActiveHand() != null)
+                return player;
+        }
+
+        return null;
     }
 
     public override string ToString()
@@ -41,5 +48,19 @@ public class Game
         
 
         return returnString;
+    }
+
+    public void ResetGame()
+    {
+        foreach (var player in PlayersInGame)
+        {
+            if (player.Email != "Dealer")
+            {
+                player.Reset();
+            }
+
+        }
+
+        PlayersInGame.RemoveAll(d => d.Email == "Dealer");
     }
 }

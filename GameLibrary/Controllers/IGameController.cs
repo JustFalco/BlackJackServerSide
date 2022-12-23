@@ -9,5 +9,8 @@ public interface IGameController
     bool CheckIfGameExists(int gameId);
     void ContinueGame(int gameId);
     Task<Player> AddPlayerToGame(Player player, Game game);
+    Task<Game> DealPlayers(int gameId);
     Task<Game> PlayGame(string choice, int gameId);
+    Task<Game> DealerEndGame(int gameId);
+
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(PlayerContext))]
-    [Migration("20221221132425_masterDeck")]
-    partial class masterDeck
+    [Migration("20221223132156_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace DatabaseLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CardCardDeck", b =>
-                {
-                    b.Property<int>("CardDecksCardDeckId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CardsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CardDecksCardDeckId", "CardsId");
-
-                    b.HasIndex("CardsId");
-
-                    b.ToTable("CardCardDeck");
-                });
 
             modelBuilder.Entity("CardHand", b =>
                 {
@@ -3410,25 +3395,6 @@ namespace DatabaseLayer.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.CardDeck", b =>
-                {
-                    b.Property<int>("CardDeckId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardDeckId"));
-
-                    b.HasKey("CardDeckId");
-
-                    b.ToTable("CardDecks");
-
-                    b.HasData(
-                        new
-                        {
-                            CardDeckId = 1
-                        });
-                });
-
             modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.Game", b =>
                 {
                     b.Property<int>("GameId")
@@ -3437,9 +3403,6 @@ namespace DatabaseLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"));
 
-                    b.Property<int>("CardsCardDeckId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CurrentPlayerIndex")
                         .HasColumnType("int");
 
@@ -3447,8 +3410,6 @@ namespace DatabaseLayer.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("GameId");
-
-                    b.HasIndex("CardsCardDeckId");
 
                     b.ToTable("Games");
                 });
@@ -3686,21 +3647,6 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CardCardDeck", b =>
-                {
-                    b.HasOne("DatabaseLayer.DAL.DomainModels.CardDeck", null)
-                        .WithMany()
-                        .HasForeignKey("CardDecksCardDeckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseLayer.DAL.DomainModels.Card", null)
-                        .WithMany()
-                        .HasForeignKey("CardsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CardHand", b =>
                 {
                     b.HasOne("DatabaseLayer.DAL.DomainModels.Hand", null)
@@ -3714,17 +3660,6 @@ namespace DatabaseLayer.Migrations
                         .HasForeignKey("cardsInHandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DatabaseLayer.DAL.DomainModels.Game", b =>
-                {
-                    b.HasOne("DatabaseLayer.DAL.DomainModels.CardDeck", "Cards")
-                        .WithMany()
-                        .HasForeignKey("CardsCardDeckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cards");
                 });
 
             modelBuilder.Entity("GamePlayer", b =>

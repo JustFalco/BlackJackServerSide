@@ -18,7 +18,45 @@ namespace DatabaseLayer.DAL.DomainModels
 		[JsonIgnore]
 		public List<Game> GamesPlayed { get; set; }
 
-		public Player()
+		[JsonIgnore]
+        public override string? ConcurrencyStamp { get; set; }
+
+		[JsonIgnore]
+        public override bool EmailConfirmed { get; set; }
+
+		[JsonIgnore]
+        public override string? NormalizedEmail { get; set; }
+
+		[JsonIgnore]
+        public override int AccessFailedCount { get; set; }
+
+		[JsonIgnore]
+        public override bool LockoutEnabled { get; set; }
+
+		[JsonIgnore]
+        public override DateTimeOffset? LockoutEnd { get; set; }
+
+		[JsonIgnore]
+        public override string? NormalizedUserName { get; set; }
+
+		[JsonIgnore]
+        public override string? PasswordHash { get; set; }
+
+		[JsonIgnore]
+        public override string? PhoneNumber { get; set; }
+
+		[JsonIgnore]
+        public override bool PhoneNumberConfirmed { get; set; }
+
+		[JsonIgnore]
+        public override string? SecurityStamp { get; set; }
+
+		[JsonIgnore]
+        public override bool TwoFactorEnabled { get; set; }
+
+		public double Balance { get; set; }
+
+        public Player()
 		{
 			Hands = new List<Hand>();
 			Hands.Add(new Hand());
@@ -40,6 +78,12 @@ namespace DatabaseLayer.DAL.DomainModels
         public override string ToString()
         {
             return "email: " + Email;
+        }
+
+        public void Reset()
+        {
+            Hands = new List<Hand>();
+            Hands.Add(new Hand());
         }
     }
 }

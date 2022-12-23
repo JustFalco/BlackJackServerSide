@@ -59,6 +59,8 @@ namespace GameLibrary.Controllers
             return game;
         }
 
+        
+
         public async Task<Game> SaveGame(Game game)
         {
             try
@@ -80,6 +82,7 @@ namespace GameLibrary.Controllers
             
         }
 
+
 		public bool CheckIfGameExists(int gameId)
 		{
 			if (_gameRepository.GetGameFromDatabase(gameId) != null)
@@ -99,6 +102,66 @@ namespace GameLibrary.Controllers
 		public async Task<Player> AddPlayerToGame(Player player, Game game)
         {
             return await _gameRepository.AddPlayerToGame(game, player);
+        }
+
+        public async Task<Game> DealPlayers(int gameId)
+        {
+            Game game = await GetGame(gameId);
+            foreach (var player in game.PlayersInGame)
+            {
+                player.Hands.First().cardsInHand.Add(_gameRepository.GetRandomCard());
+                player.Hands.First().cardsInHand.Add(_gameRepository.GetRandomCard());
+            }
+
+            Player dealer = new Player
+            {
+                Email = "Dealer",
+                UserName = "Dealer"
+            };
+
+            dealer.Hands.First().Add(_gameRepository.GetRandomCard());
+            Card card = _gameRepository.GetRandomCard();
+            card.IsHidden = true;
+            dealer.Hands.First().Add(card);
+
+            game.PlayersInGame.Add(dealer);
+
+            SaveGame(game);
+            return game;
+        }
+
+        public async Task<Game> DealerEndGame(int gameId)
+        {
+            Game game = await GetGame(gameId);
+            Player dealer = game.PlayersInGame.Where(p => p.Email == "Dealer").First();
+
+            if (dealer == null)
+            {
+                throw new Exception("No dealer found!");
+            }
+
+            if (dealer.Hands.First().GetLowestValue() >= 17)
+            {
+                dealer.Hands.First().StandBust();
+            }
+
+            while (dealer.Hands.First().IsActiveHand)
+            {
+                
+                dealer.Hands.First().Add(_gameRepository.GetRandomCard());
+                if (dealer.Hands.First().GetLowestValue() >= 17)
+                {
+                    dealer.Hands.First().StandBust();
+                }
+            }
+
+            foreach (var c in dealer.Hands.First().cardsInHand)
+            {
+                c.IsHidden = false;
+            }
+
+            await SaveGame(game);
+            return game;
         }
 
         public async Task<Game> PlayGame(string choice, int gameId)
@@ -124,5 +187,7 @@ namespace GameLibrary.Controllers
             SaveGame(game);
             return game;
         }
-	}
+
+        
+    }
 }

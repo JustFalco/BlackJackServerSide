@@ -31,7 +31,11 @@ public class GameRepository : IGameRepository
 			throw new ArgumentNullException(nameof(game));
         }
 
-        _playerContext.Games.Add(game);
+        if (_playerContext.Games.Count(g => g.GameId == game.GameId) == 0)
+        {
+            _playerContext.Games.Add(game);
+        }
+
         await _playerContext.SaveChangesAsync();
 
         return game;
@@ -80,4 +84,5 @@ public class GameRepository : IGameRepository
         return _playerContext.Cards.Where(c => c.Id == numGen.NextInt64(min, max)).First();
 
     }
+
 }

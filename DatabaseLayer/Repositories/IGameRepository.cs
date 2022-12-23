@@ -9,4 +9,5 @@ public interface IGameRepository
     Task<Game> GetGameFromDatabase(int gameId);
     Task<Player> AddPlayerToGame(Game game, Player player);
     Card GetRandomCard();
+
 }

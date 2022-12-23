@@ -10,19 +10,20 @@ public class Hand
     {
 		List<string> options = new List<string>();
 
-		options.Add("stand");
+		
         if (CanSplit())
         {
 			options.Add("split");
         }
         if (CanHit())
         {
-            options.Add("split");
+            options.Add("hit");
         }
         if (CanDouble())
         {
-            options.Add("split");
+            options.Add("double");
         }
+        options.Add("stand");
         return options;
     }
 

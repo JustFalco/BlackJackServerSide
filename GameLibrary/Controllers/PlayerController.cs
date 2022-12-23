@@ -33,6 +33,7 @@ namespace GameLibrary.Controllers
 			newPlayer.Email = playerData.Email;
             newPlayer.PasswordHash = _userManager.PasswordHasher.HashPassword(newPlayer, playerData.Password);
             newPlayer.UserName = playerData.Email;
+            newPlayer.Balance = 10.000D;
 
             var result = await _repository.AddPlayerToDB(newPlayer);
 
@@ -45,6 +46,11 @@ namespace GameLibrary.Controllers
             {
                 player.GetFirstActiveHand().cardsInHand.Add(_gameRepository.GetRandomCard());
             }
+
+            if (player.GetFirstActiveHand().GetLowestValue() > 21)
+            {
+                player.GetFirstActiveHand().StandBust();
+            }
         }
 
 		public void Stand(Player player)
@@ -54,8 +60,12 @@ namespace GameLibrary.Controllers
 
 		public void Double(Player player)
 		{
-			throw new NotImplementedException();
-		}
+            if (player.GetFirstActiveHand().CanDouble())
+            {
+                player.GetFirstActiveHand().cardsInHand.Add(_gameRepository.GetRandomCard());
+                player.GetFirstActiveHand().StandBust();
+            }
+        }
 
 		public void Split(Player player)
 		{
